@@ -5,9 +5,33 @@ import requests
 import json
 
 def create_home_window(stacked_widget):
+    def submit_logout():
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Icon.Warning)
+        msg_box.setWindowTitle("Log Out")
+        msg_box.setText("Are you sure you want to log out?")
+        msg_box.setStandardButtons(QMessageBox.StandardButton.No|QMessageBox.StandardButton.Yes)
+        msg_box.setDefaultButton(QMessageBox.StandardButton.Yes)
+        # test = QMessageBox.critical(self,"แจ้งเตือน","test",QMessageBox.StandardButton.No | QMessageBox.StandardButton.Yes)
+        response = msg_box.exec()
+        if response == QMessageBox.StandardButton.Yes:
+            stacked_widget.setCurrentWidget(stacked_widget.widget(0))
+        else:
+            stacked_widget.setCurrentWidget(stacked_widget.widget(2))
     def submit_profile():
         print("submit_profile")
         stacked_widget.setCurrentWidget(stacked_widget.widget(3))
+
+    def submit_deposit():
+        stacked_widget.setCurrentWidget(stacked_widget.widget(4))
+
+    def submit_withdraw():
+        stacked_widget.setCurrentWidget(stacked_widget.widget(5))
+
+    def submit_transfer():
+        stacked_widget.setCurrentWidget(stacked_widget.widget(6))
+
+
     main_window = QWidget()
     main_window.setWindowTitle("Santander Bank")
     main_window.setFixedSize(QSize(380, 570))
@@ -31,8 +55,10 @@ def create_home_window(stacked_widget):
     header_layout.addSpacerItem(QSpacerItem(20,20,QSizePolicy.Policy.Expanding))
 
     logout_btn = QPushButton('Log out')
+    logout_btn.clicked.connect(submit_logout)
     header_layout.addWidget(logout_btn)
     main_layout.addLayout(header_layout)
+
 
     checking_group = QGroupBox('Checking')
     checking_group.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -53,10 +79,34 @@ def create_home_window(stacked_widget):
     main_layout.addWidget(saving_group)
 
     btn_layout = QVBoxLayout()
-    for text in ["Deposit","Transfer","Widraw","Zelle"]:
-        btn = QPushButton(text)
-        btn.setFixedSize(QSize(100,60))
-        btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        btn_layout.addWidget(btn)
+    # for text in ["Deposit","Transfer","Withdraw","Zelle"]:
+        # btn = QPushButton(text)
+        # btn.setFixedSize(QSize(100,60))
+        # btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # btn_layout.addWidget(btn)                                # ***** for we can use when we need to run samething
+    
+    deposit_btn = QPushButton("Deposit")
+    deposit_btn.setFixedSize(QSize(100,60))
+    deposit_btn.clicked.connect(submit_deposit)
+    btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    btn_layout.addWidget(deposit_btn)
+
+    transfer_btn = QPushButton("Transfer")
+    transfer_btn.setFixedSize(QSize(100,60))
+    transfer_btn.clicked.connect(submit_transfer)
+    btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    btn_layout.addWidget(transfer_btn)
+
+    withdraw_btn = QPushButton("Withdraw")
+    withdraw_btn.setFixedSize(QSize(100,60))
+    withdraw_btn.clicked.connect(submit_withdraw)
+    btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    btn_layout.addWidget(withdraw_btn)
+
+    zelle_btn = QPushButton("Zelle")
+    zelle_btn.setFixedSize(QSize(100,60))
+    btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    btn_layout.addWidget(zelle_btn)
+
     main_layout.addLayout(btn_layout)
     return main_window
