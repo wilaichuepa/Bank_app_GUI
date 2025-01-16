@@ -30,6 +30,10 @@ def create_home_window(stacked_widget):
 
     def submit_transfer():
         stacked_widget.setCurrentWidget(stacked_widget.widget(6))
+    
+    def submit_zelle():
+        stacked_widget.setCurrentWidget(stacked_widget.widget(9))
+
 
 
     main_window = QWidget()
@@ -105,6 +109,7 @@ def create_home_window(stacked_widget):
 
     zelle_btn = QPushButton("Zelle")
     zelle_btn.setFixedSize(QSize(100,60))
+    zelle_btn.clicked.connect(submit_zelle)
     btn_layout.setAlignment(Qt.AlignmentFlag.AlignCenter)
     btn_layout.addWidget(zelle_btn)
 

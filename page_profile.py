@@ -45,6 +45,7 @@ def create_profile_window(stacked_widget): # add stacked_widget to link with mai
         
     else:
         img_lb.setText('image not found')
+        
     img_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
     main_layout.addWidget(img_lb)
 
