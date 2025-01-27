@@ -3,8 +3,25 @@ from PyQt6.QtWidgets import *
 # from signin import *
 import requests
 import json
+from login import login_signal
+from login import account_signal
+
+
 
 def create_home_window(stacked_widget):
+    sum_current_balance = None
+    def checking_balance_home(account_number):
+        nonlocal  sum_current_balance
+
+        data = {"account_number":account_number}
+        response = requests.post("http://127.0.0.1:8998/select_data_cash_balance",json=data)
+        resp = response.json()
+        print(resp)
+        sum_current_balance =resp['result']['sum_current_balance']
+        checking_balance_lb.setText(f'{"{:.2f}".format(sum_current_balance)}\n Available Balance')
+
+        # if resp['status']== 'OK':
+
     def submit_logout():
         msg_box = QMessageBox()
         msg_box.setIcon(QMessageBox.Icon.Warning)
@@ -43,6 +60,8 @@ def create_home_window(stacked_widget):
     main_layout = QVBoxLayout()
     main_window.setLayout(main_layout)
 
+    account_signal.account_success.connect(checking_balance_home)
+
     header_layout = QHBoxLayout()
     header_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
@@ -67,9 +86,9 @@ def create_home_window(stacked_widget):
     checking_group = QGroupBox('Checking')
     checking_group.setAlignment(Qt.AlignmentFlag.AlignCenter)
     checking_layout = QVBoxLayout()
-    checking_balance = QLabel("0.00 \n Available Balance")
-    checking_balance.setAlignment(Qt.AlignmentFlag.AlignCenter|Qt.AlignmentFlag.AlignTop)
-    checking_layout.addWidget(checking_balance)
+    checking_balance_lb = QLabel(sum_current_balance)
+    checking_balance_lb.setAlignment(Qt.AlignmentFlag.AlignCenter|Qt.AlignmentFlag.AlignTop)
+    checking_layout.addWidget(checking_balance_lb)
     checking_group.setLayout(checking_layout)
     main_layout.addWidget(checking_group)
 

@@ -54,10 +54,14 @@ def create_tf_checking_window(stacked_widget):
     main_layout.addWidget(transfer_btn, alignment=Qt.AlignmentFlag.AlignCenter)
     main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
 
+    home_btn = QPushButton('Home')
+    home_btn.setFixedWidth(60)
+    home_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(2)))
+    main_layout.addWidget(home_btn, alignment=Qt.AlignmentFlag.AlignRight)
 
     back_btn = QPushButton('Back')
     back_btn.setFixedWidth(60)
-    back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(2)))
+    back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(6)))
     main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight)
 
 

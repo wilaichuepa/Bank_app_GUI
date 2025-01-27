@@ -3,24 +3,52 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtGui import QPixmap,QPainter,QBrush
 import requests
 import json 
+from login import login_signal
+
 
 def create_profile_window(stacked_widget): # add stacked_widget to link with main.py.
+    email = None
+    phone = None
+    address = None
+    name = None
+    def user_info(username,password):
+        nonlocal email
+        nonlocal phone
+        nonlocal address
+        nonlocal name
+        data = {"username":username,"password":password}
+        response = requests.post("http://127.0.0.1:8998/check_login",json=data)
+        resp = response.json()
+        
+        if resp['status']== 'OK':
+                
+            name = resp['data'][0]['firstname']+" " + resp['data'][0]['lastname']
+            name_lb.setText(f"{name}")
+            email =resp['data'][0]['email']
+            phone = resp['data'][0]['phone_number']
+            address =resp['data'][0]['address']
+            
     def show_email_info():
-        QMessageBox.information(None,"information","well@gmail.com")
+        QMessageBox.information(None,"information",email)
     def show_phone_info():
-        QMessageBox.information(None,"information","9733174164")
+        QMessageBox.information(None,"information",phone)
     def show_address_info():
-        QMessageBox.information(None,"information","40 standley rd nj 07079")
+        QMessageBox.information(None,"information",address)
 
     def back_to_home():
         stacked_widget.setCurrentWidget(stacked_widget.widget(2))
     #9-11 set window
+      
+
     main_window = QWidget()
     main_window.setWindowTitle("Profile")
     main_window.setFixedSize(QSize(380, 570))  
     #set Horizontl or vertical 
     main_layout = QVBoxLayout()
     main_window.setLayout(main_layout)
+
+    login_signal.login_success.connect(user_info)
+
 
     img_lb = QLabel()
     img = QPixmap("./DSC_0020.JPG")
@@ -48,8 +76,7 @@ def create_profile_window(stacked_widget): # add stacked_widget to link with mai
         
     img_lb.setAlignment(Qt.AlignmentFlag.AlignCenter)
     main_layout.addWidget(img_lb)
-
-    name_lb = QLabel('Wilai Chuepa')
+    name_lb = QLabel(name)
     name_lb.setAlignment(Qt.AlignmentFlag.AlignCenter|Qt.AlignmentFlag.AlignTop)
     # name_lb.setStyleSheet('font-size:30px; font-weight:bold;text-align:center')
     name_lb.setStyleSheet('font-size:15px; font-weight:bold;text-align:center')

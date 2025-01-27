@@ -11,18 +11,41 @@ def create_request_window(stacked_widget):
     main_window.setLayout(main_layout)
     input_text_layout = QHBoxLayout(main_window)
 
+    request_from_lb = QLabel('Request From')
+    # main_layout.addWidget(request_from_lb)
+    request_from_lb.setStyleSheet('font-size:15px; font-weight:bold')
+    main_layout.addWidget(request_from_lb, alignment=Qt.AlignmentFlag.AlignCenter)
+    main_layout.addSpacerItem(QSpacerItem(20,30,QSizePolicy.Policy.Expanding))
+
     email_phone_lb = QLabel('Email/Phone')
     email_phone_input = QLineEdit()
     main_layout.addWidget(email_phone_lb)
     main_layout.addWidget(email_phone_input)
+
+    main_layout.addSpacerItem(QSpacerItem(50, 30, QSizePolicy.Policy.Expanding))
 
     request_amount_lb = QLabel('Request Amonut')
     request_amount_input = QLineEdit()
     main_layout.addWidget(request_amount_lb)
     main_layout.addWidget(request_amount_input)
 
+    main_layout.addSpacerItem(QSpacerItem(50, 30, QSizePolicy.Policy.Expanding))
+    request_btn = QPushButton('Request')
+    request_btn.setFixedWidth(100)
+    main_layout.addWidget(request_btn, alignment=Qt.AlignmentFlag.AlignCenter)
 
-    # email_phone_lb = QLabel('Email/Phone')
+    main_layout.addStretch()
+
+    back_btn = QPushButton('Back')
+    back_btn.setFixedWidth(60)
+    back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(9)))
+    main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight)
+    main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignBottom)
+    
+
+    return main_window
+
+# email_phone_lb = QLabel('Email/Phone')
     # email_phone_lb.setAlignment(Qt.AlignmentFlag.AlignLeft|Qt.AlignmentFlag.AlignTop)
     # email_phone_lb.setStyleSheet('font-size:15px;text-align:center')
     # main_layout.addWidget(email_phone_lb)
@@ -43,16 +66,3 @@ def create_request_window(stacked_widget):
     # input_text_layout.addWidget(request_amount_input)
     # request_amount_input.setPlaceholderText("+1")
     # main_layout.addWidget(request_amount_input)
-
-    request_btn = QPushButton('Request')
-    request_btn.setFixedWidth(100)
-    main_layout.addWidget(request_btn, alignment=Qt.AlignmentFlag.AlignCenter)
-    main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
-
-    back_btn = QPushButton('Back')
-    back_btn.setFixedWidth(60)
-    back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(9)))
-    main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight)
-    
-
-    return main_window

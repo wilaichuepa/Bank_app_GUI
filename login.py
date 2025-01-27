@@ -4,11 +4,21 @@ from PyQt6.QtWidgets import *
 import requests
 import json
 
+class LoginSignal(QObject):
+    login_success = pyqtSignal(str,str)
+
+class AccountSignal(QObject):
+    account_success = pyqtSignal(str)
+    
+account_signal = AccountSignal()
+
+login_signal = LoginSignal()
+
 def create_login_window(stacked_widget):
     def submit():
         username = username_input.text()
         password = password_input.text()
-        
+        login_signal.login_success.emit(username,password)
         data = {"username":username,"password":password}
         response = requests.post("http://127.0.0.1:8998/check_login",json=data)
         resp = response.json()
@@ -16,8 +26,12 @@ def create_login_window(stacked_widget):
         if resp["status"] == "OK":
             QMessageBox.information(None,"Warning","log in success")
             stacked_widget.setCurrentWidget(stacked_widget.widget(2))
-            
-            # print(response)
+            account_number = resp['data'][0]['account_number']
+            account_signal.account_success.emit(account_number)
+            # print(f'your account_number is {account_number}')
+            # print('*'*30)
+            # print(resp)
+            # print('*'*30)
         else:
             QMessageBox.information(None,"Warning","log in fail")
             
