@@ -12,6 +12,7 @@ def create_deposit_window(stacked_widget):
     # Main layout
     main_layout = QVBoxLayout(main_window)
     main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+    main_window.setLayout(main_layout)
 
     # Deposit Group Box
     deposit_group = QGroupBox('Deposit Amount')
@@ -30,12 +31,16 @@ def create_deposit_window(stacked_widget):
     deposit_btn = QPushButton('Deposit')
     deposit_btn.setFixedWidth(100)
     main_layout.addWidget(deposit_btn, alignment=Qt.AlignmentFlag.AlignCenter)
-    main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
+    # main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
+    main_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
     # Back button to navigate home
     back_btn = QPushButton('Back')
     back_btn.setFixedWidth(60)
     back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(2)))
     main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight)
+    
+
+    
 
     return main_window

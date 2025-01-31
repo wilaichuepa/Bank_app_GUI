@@ -101,6 +101,7 @@ def create_profile_window(stacked_widget): # add stacked_widget to link with mai
     back_btn = QPushButton('Back')
     back_btn.setFixedWidth(60)
     back_btn.clicked.connect(back_to_home)
+    main_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
     main_layout.addWidget(back_btn,alignment= Qt.AlignmentFlag.AlignRight)
 
     return main_window

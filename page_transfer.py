@@ -35,6 +35,7 @@ def create_transfer_window(stacked_widget):
     # transfer_layout.addWidget(transfer_btn_1)
     transfer_layout.addWidget(transfer_btn_2)
     main_layout.addWidget(transfer_group)
+    main_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
     
     back_btn = QPushButton('Back')

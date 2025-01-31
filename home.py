@@ -3,24 +3,36 @@ from PyQt6.QtWidgets import *
 # from signin import *
 import requests
 import json
-from login import login_signal
+# from login import login_signal
 from login import account_signal
+from login import saving_signal
 
 
 
 def create_home_window(stacked_widget):
     sum_current_balance = None
+    sum_saving_current_balance = None 
+    
     def checking_balance_home(account_number):
         nonlocal  sum_current_balance
 
         data = {"account_number":account_number}
         response = requests.post("http://127.0.0.1:8998/select_data_cash_balance",json=data)
         resp = response.json()
-        print(resp)
+        # print(resp)
         sum_current_balance =resp['result']['sum_current_balance']
         checking_balance_lb.setText(f'{"{:.2f}".format(sum_current_balance)}\n Available Balance')
 
-        # if resp['status']== 'OK':
+    def saving_balance_home(account_number):
+        nonlocal sum_saving_current_balance
+
+        data = {"account_number": account_number}
+        response = requests.post("http://127.0.0.1:8998/select_data_saving_balance", json=data)
+        resp = response.json()
+        print(resp)
+        sum_saving_current_balance = resp['result']['sum_saving_current_balance']
+        saving_balance_lb.setText(f'{"{:.2f}".format(sum_saving_current_balance)}\n Saving Balance')
+        
 
     def submit_logout():
         msg_box = QMessageBox()
@@ -62,6 +74,8 @@ def create_home_window(stacked_widget):
 
     account_signal.account_success.connect(checking_balance_home)
 
+    saving_signal.saving_success.connect(saving_balance_home)
+
     header_layout = QHBoxLayout()
     header_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
@@ -95,9 +109,9 @@ def create_home_window(stacked_widget):
     saving_group = QGroupBox('Saving')
     saving_group.setAlignment(Qt.AlignmentFlag.AlignCenter)
     saving_layout = QVBoxLayout()
-    saving_balance = QLabel("0.00 \n Available Balance")
-    saving_balance.setAlignment(Qt.AlignmentFlag.AlignCenter)
-    saving_layout.addWidget(saving_balance)
+    saving_balance_lb = QLabel(sum_saving_current_balance) #********put sum_current_balance for saving
+    saving_balance_lb.setAlignment(Qt.AlignmentFlag.AlignCenter|Qt.AlignmentFlag.AlignTop)
+    saving_layout.addWidget(saving_balance_lb)
     saving_group.setLayout(saving_layout)
     main_layout.addWidget(saving_group)
 

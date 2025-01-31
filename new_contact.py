@@ -36,6 +36,7 @@ def create_contact_window(stacked_widget):
     add_btn.setFixedWidth(100)
     main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
     main_layout.addWidget(add_btn, alignment=Qt.AlignmentFlag.AlignCenter)
+    main_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
     #back_layout = QVBoxLayout()
 

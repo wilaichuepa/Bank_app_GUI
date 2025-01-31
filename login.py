@@ -9,7 +9,14 @@ class LoginSignal(QObject):
 
 class AccountSignal(QObject):
     account_success = pyqtSignal(str)
-    
+
+class SavingSignal(QObject):
+    saving_success = pyqtSignal(str)
+
+
+
+saving_signal = SavingSignal()
+
 account_signal = AccountSignal()
 
 login_signal = LoginSignal()
@@ -28,6 +35,7 @@ def create_login_window(stacked_widget):
             stacked_widget.setCurrentWidget(stacked_widget.widget(2))
             account_number = resp['data'][0]['account_number']
             account_signal.account_success.emit(account_number)
+            saving_signal.saving_success.emit(account_number)
             # print(f'your account_number is {account_number}')
             # print('*'*30)
             # print(resp)

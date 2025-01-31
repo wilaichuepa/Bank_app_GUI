@@ -35,6 +35,7 @@ def create_withdraw_window(stacked_widget):
     back_btn = QPushButton('Back')
     back_btn.setFixedWidth(60)
     back_btn.clicked.connect(lambda: stacked_widget.setCurrentWidget(stacked_widget.widget(2)))
+    main_layout.addSpacerItem(QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
     main_layout.addWidget(back_btn, alignment=Qt.AlignmentFlag.AlignRight)
 
     return main_window
