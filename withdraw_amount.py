@@ -5,8 +5,35 @@ import requests
 import json
 
 def create_withdraw_window(stacked_widget):
-    withdraw_saving_amount = ""
+    withdraw_amount = None
     account_number = None
+
+    def submit_withdraw():
+        nonlocal withdraw_amount, account_number
+        withdraw_amount = checking_balance_input.text()
+
+        if not account_number:
+            QMessageBox.warning(None, "Error", "No account number found. Please log in again.")
+            return
+        
+        data = {
+            "account_number": account_number,
+            "withdraw_amount": int(withdraw_amount)
+        }
+        print(data)
+        try:
+            response = requests.post("http://127.0.0.1:8998/insert_data_withdraw", json=data)
+            resp = response.json()
+            print(resp)
+            
+            if resp.get("status") == "OK":
+                QMessageBox.information(None, "Success", "Withdraw successful")
+                checking_balance_input.setText("") 
+            else:
+                QMessageBox.warning(None, "Failed", "Withdraw failed")
+        except requests.RequestException:
+            QMessageBox.warning(None, "Error", "Failed to connect to the server")
+    
 
     def store_account_number(acc_num):
         nonlocal account_number
@@ -35,30 +62,6 @@ def create_withdraw_window(stacked_widget):
     withdraw_group.setLayout(withdraw_layout)
     main_layout.addWidget(withdraw_group)
 
-    def submit_withdraw():
-        nonlocal withdraw_saving_amount, account_number
-        withdraw_saving_amount = checking_balance_input.text()
-
-        if not account_number:
-            QMessageBox.warning(None, "Error", "No account number found. Please log in again.")
-            return
-        
-        data = {
-            "account_number": account_number,
-            "withdraw_saving_amount": withdraw_saving_amount
-        }
-
-        try:
-            response = requests.post("http://127.0.0.1:8998/insert_data_saving_withdraw", json=data)
-            resp = response.json()
-            
-            if resp.get("status") == "OK":
-                QMessageBox.information(None, "Success", "Withdraw successful")
-                checking_balance_input.setText("") 
-            else:
-                QMessageBox.warning(None, "Failed", "Withdraw failed")
-        except requests.RequestException:
-            QMessageBox.warning(None, "Error", "Failed to connect to the server")
 
     withdraw_btn = QPushButton('Withdraw')
     withdraw_btn.setFixedWidth(100)

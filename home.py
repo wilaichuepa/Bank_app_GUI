@@ -7,9 +7,6 @@ import json
 from login import account_signal
 from login import saving_signal
 
-
-
-
 def create_home_window(stacked_widget):
     sum_current_balance = None
     sum_saving_current_balance = None 
@@ -20,7 +17,6 @@ def create_home_window(stacked_widget):
         data = {"account_number":account_number}
         response = requests.post("http://127.0.0.1:8998/select_data_cash_balance",json=data)
         resp = response.json()
-        # print(resp)
         sum_current_balance =resp['result']['sum_current_balance']
         checking_balance_lb.setText(f'{"{:.2f}".format(sum_current_balance)}\n Available Balance')
 
@@ -30,7 +26,7 @@ def create_home_window(stacked_widget):
         data = {"account_number": account_number}
         response = requests.post("http://127.0.0.1:8998/select_data_saving_balance", json=data)
         resp = response.json()
-        print(resp)
+        
         sum_saving_current_balance = resp['result']['sum_saving_current_balance']
         saving_balance_lb.setText(f'{"{:.2f}".format(sum_saving_current_balance)}\n Saving Balance')
         

@@ -1,8 +1,26 @@
 from PyQt6.QtCore import *
 from PyQt6.QtWidgets import *
+import requests
+import json
+# from login import login_signal
+from login import account_signal
+from login import saving_signal
 
 
 def create_tf_saving_window (stacked_widget):
+    sum_current_balance = None
+
+    def checking_balance_home(account_number):
+        nonlocal  sum_current_balance
+
+        data = {"account_number":account_number}
+        response = requests.post("http://127.0.0.1:8998/select_data_cash_balance",json=data)
+        resp = response.json()
+        sum_current_balance =resp['result']['sum_current_balance']
+        print(sum_current_balance)
+        transfer_btn_1.setText(f'Chicking       {"{:.2f}".format(sum_current_balance)}')
+
+    
     main_window = QWidget()
     main_window.setWindowTitle("Santander Bank")
     main_window.setFixedSize(QSize(380, 570))
@@ -10,6 +28,7 @@ def create_tf_saving_window (stacked_widget):
     main_layout = QVBoxLayout(main_window)
     main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
+    account_signal.account_success.connect(checking_balance_home)
     transfer_from_saving_lb = QLabel('Transfer From')
     transfer_from_saving_lb.setAlignment(Qt.AlignmentFlag.AlignCenter|Qt.AlignmentFlag.AlignTop)
     transfer_from_saving_lb.setStyleSheet('font-size:15px;text-align:center')

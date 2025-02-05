@@ -8,7 +8,7 @@ import json
    
 
 def create_deposit_window(stacked_widget):
-    deposit_amount = ""
+    deposit_amount = None
     account_number = None
     def submit_deposit():
         nonlocal deposit_amount,account_number
