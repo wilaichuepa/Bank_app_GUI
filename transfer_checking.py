@@ -14,6 +14,7 @@ def create_tf_checking_window(stacked_widget):
 
     def saving_balance_home(account_number):
         nonlocal sum_saving_current_balance
+
         data = {"account_number": account_number}
         response = requests.post("http://127.0.0.1:8998/select_data_saving_balance", json=data)
         resp = response.json()
@@ -40,22 +41,24 @@ def create_tf_checking_window(stacked_widget):
             print(resp)
             
             if resp.get("status") == "OK":
-                QMessageBox.information(None, "Success", "Withdraw successful")
+                QMessageBox.information(None, "information", "Transfer success")
                 checking_balance_input.setText("") 
+                data = {
+                "account_number": account_number,
+                "save_amount" : int(transfer_amount)
+                }
+                response = requests.post("http://127.0.0.1:8998/insert_data_saving", json=data)
+                resp = response.json()
+
             else:
-                QMessageBox.warning(None, "Failed", "Withdraw failed")
+                QMessageBox.warning(None, "Warning", "Transfer failed")
         except requests.RequestException:
             QMessageBox.warning(None, "Error", "Failed to connect to the server")
     
-    def submit_transfer_checking():
-        stacked_widget.setCurrentWidget(stacked_widget.widget(7))
-    
-
     def store_account_number(acc_num):
         nonlocal account_number
         account_number = acc_num
 
-    account_signal.account_success.connect(store_account_number)
 
 
     main_window = QWidget()
@@ -65,6 +68,7 @@ def create_tf_checking_window(stacked_widget):
     main_layout = QVBoxLayout(main_window)
     main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
+    account_signal.account_success.connect(store_account_number)
     saving_signal.saving_success.connect(saving_balance_home)
 
     transfer_from_lb = QLabel('Transfer From')
@@ -99,16 +103,16 @@ def create_tf_checking_window(stacked_widget):
     saving_lb.setStyleSheet('font-size:15px;text-align:center')
     main_layout.addWidget(saving_lb)
 
-    transfer_btn_2 = QPushButton("Saving            500,000.00$")
+    transfer_btn_2 = QPushButton("")
     main_layout.addWidget(transfer_btn_2)
     # main_layout.addWidget(transfer_btn_2, alignment=Qt.AlignmentFlag.AlignLeft)
     # transfer_btn_2.setFixedWidth(150)
     # # main_layout.addSpacerItem(QSpacerItem(100,100, QSizePolicy.Policy.Expanding))
 
 
-    transfer_btn = QPushButton('Transfer')
+    transfer_btn= QPushButton('Transfer')
     transfer_btn.setFixedWidth(100)
-    transfer_btn_2.clicked.connect(submit_transfer_checking)
+    transfer_btn.clicked.connect(submit_transfer_checking)
     main_layout.addWidget(transfer_btn, alignment=Qt.AlignmentFlag.AlignCenter)
     main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
 

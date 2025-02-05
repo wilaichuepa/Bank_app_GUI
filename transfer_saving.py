@@ -9,15 +9,51 @@ from login import saving_signal
 
 def create_tf_saving_window (stacked_widget):
     sum_current_balance = None
+    account_number = None
+    withdraw_amount = None
 
     def checking_balance_home(account_number):
         nonlocal  sum_current_balance
+    
+    def submit_transfer_saving():
+        nonlocal withdraw_amount, account_number
+        transfer_amount = checking_balance_input.text()
+
+        if not account_number:
+            QMessageBox.warning(None, "Error", "No account number found. Please log in again.")
+            return
+        
+        data = {
+            "account_number": account_number,
+            "withdraw_saving_amount": int(transfer_amount)
+        }
+        try:
+            response = requests.post("http://127.0.0.1:8998/insert_data_saving_withdraw", json=data)
+            resp = response.json()
+            
+            if resp.get("status") == "OK":
+                QMessageBox.information(None, "information", "Transfer success")
+                checking_balance_input.setText("") 
+                data = {
+                "account_number": account_number,
+                "deposit_amount" : int(transfer_amount)
+                }
+                response = requests.post("http://127.0.0.1:8998/insert_data_deposit", json=data)
+                resp = response.json()
+
+            else:
+                QMessageBox.warning(None, "Warning", "Transfer failed")
+        except requests.RequestException:
+            QMessageBox.warning(None, "Error", "Failed to connect to the server")
+        
+    def store_account_number(acc_num):
+        nonlocal account_number
+        account_number = acc_num
 
         data = {"account_number":account_number}
         response = requests.post("http://127.0.0.1:8998/select_data_cash_balance",json=data)
         resp = response.json()
         sum_current_balance =resp['result']['sum_current_balance']
-        print(sum_current_balance)
         transfer_btn_1.setText(f'Chicking       {"{:.2f}".format(sum_current_balance)}')
 
     
@@ -27,6 +63,9 @@ def create_tf_saving_window (stacked_widget):
 
     main_layout = QVBoxLayout(main_window)
     main_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
+    account_signal.account_success.connect(store_account_number)
+    saving_signal.saving_success.connect(checking_balance_home)
 
     account_signal.account_success.connect(checking_balance_home)
     transfer_from_saving_lb = QLabel('Transfer From')
@@ -61,11 +100,12 @@ def create_tf_saving_window (stacked_widget):
     checking_lb.setStyleSheet('font-size:15px;text-align:center')
     main_layout.addWidget(checking_lb)
 
-    transfer_btn_1 = QPushButton("Checking            500.00$")
+    transfer_btn_1 = QPushButton("")
     main_layout.addWidget(transfer_btn_1)
 
     transfer_btn = QPushButton('Transfer')
     transfer_btn.setFixedWidth(100)
+    transfer_btn.clicked.connect(submit_transfer_saving)
     main_layout.addWidget(transfer_btn, alignment=Qt.AlignmentFlag.AlignCenter)
     main_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Expanding))
 
