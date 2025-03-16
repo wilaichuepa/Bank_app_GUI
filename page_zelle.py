@@ -8,7 +8,11 @@ import json
 def create_zelle_window(stacked_widget):
 
     def send_submit():
+        # data = {"Phone_email":phone_email,"my_account_number":my_account_number,"zelle_amount":zelle_amount}   
+        # response = requests.post("http://http://127.0.0.1:8998/recippient_zelle",json=data)
+        # resp = response.json()
         stacked_widget.setCurrentWidget(stacked_widget.widget(10))
+
     def request_submit():
         stacked_widget.setCurrentWidget(stacked_widget.widget(11))
     def contact_submit():
